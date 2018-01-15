@@ -1,0 +1,26 @@
+.component-theme-search-menu-link {
+  display: inline-block;
+  padding-left: 3rem;
+  position: relative;
+  margin: 0 auto;
+  text-align: right;
+  .component-theme-popup--search-menu-link {
+    z-index: -1;
+    opacity: 0;
+  }
+  &:hover .component-theme-popup--search-menu-link {
+    opacity: 1;
+    z-index: 1;
+  }
+}
+
+.component-theme-popup--search-menu-link {
+
+  input {
+    width: 100%;
+    outline: none;
+    border: 0;
+    font-size: 0.825rem;
+    color: #393939;
+  }
+}

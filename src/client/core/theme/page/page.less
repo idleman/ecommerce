@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+
+
+.theme-data-container {
+  display: inline-block;
+  width: 100%;
+  max-width: 1600px;
+  padding-right: 2rem;
+  padding-left: 2rem;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.component-theme-page {
+  font-size: 0.825rem;
+  display: inline-block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align:center;
+
+  &,
+  input {
+    font-family: 'Montserrat', sans-serif;
+  }
+}
+
+.component-theme-page-main {
+  display: inline-block;
+  width: 100%;
+  & > .theme-data-container > div {
+    position: relative;
+  }
+}
+
+.component-theme-page-aside {
+  position: absolute;
+  width: 17rem;
+  left: 0;
+  top: 0;
+  padding-right: 2.25rem;
+  & > hr:first-child {
+    margin: 0 0 2.25rem 0;
+  }
+}
+.component-theme-page-content {
+  padding-left: 20rem;
+   h1 {
+     padding-top: 0;
+     margin-top: 0;
+   }
+}

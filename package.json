@@ -1,0 +1,59 @@
+{
+  "name": "ecommerce",
+  "version": "1.0.0",
+  "description": "A full stack e-commerce example",
+  "main": "index.js",
+  "scripts": {
+    "test": "cross-env NODE_ENV=test npm run test:run",
+    "build": "rimraf dist && cross-env NODE_ENV=production npm run build:run",
+    "test:run": "cd src/client && npm run test",
+    "build:run": "cd src/client && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idleman/ecommerce.git"
+  },
+  "private": true,
+  "author": "Fredrik Olofsson <evoozer@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/idleman/ecommerce/issues"
+  },
+  "homepage": "https://github.com/idleman/ecommerce#readme",
+  "devDependencies": {
+    "@babel/core": "^7.0.0-beta.37",
+    "@babel/preset-react": "^7.0.0-beta.37",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-inferno": "^3.3.1",
+    "babel-plugin-module-resolver": "^3.0.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-minify": "^0.2.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "copyfiles": "^1.2.0",
+    "cross-env": "^5.1.3",
+    "css-loader": "^0.28.8",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "http-server": "^0.11.1",
+    "ignore-styles": "^5.0.1",
+    "immutable": "^3.8.2",
+    "less": "^2.7.3",
+    "less-loader": "^4.0.5",
+    "mkdirp": "^0.5.1",
+    "mocha": "^4.1.0",
+    "normalize.css": "^7.0.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "redux": "^3.7.2",
+    "redux-immutable": "^4.0.0",
+    "reselect": "^3.0.1",
+    "rimraf": "^2.6.2",
+    "route-parser": "0.0.5",
+    "style-loader": "^0.19.1",
+    "uglifyjs-webpack-plugin": "^1.1.6",
+    "webpack": "^3.10.0"
+  }
+}

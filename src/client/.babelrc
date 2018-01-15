@@ -1,0 +1,25 @@
+{
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": [
+            "last 2 Chrome versions",
+            "last 2 Firefox versions",
+            "last 2 Edge versions"
+          ]
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    "transform-object-rest-spread",
+    ["transform-react-jsx", { "pragma": "View.createElement" } ],
+    ["module-resolver", {
+      "alias": {
+        "evoozer": "../../packages/evoozer"
+      }
+    }]
+  ]
+}

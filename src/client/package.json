@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "test": "npm run test:packages && npm run test:client",
+    "test:packages": "mocha --harmony --require babel-register ./../../packages/**/test.js --bail",
+    "test:client": "mocha --harmony --require ignore-styles --require babel-register ./**/test.js --bail",
+    "build": "webpack && copyfiles -f ./public/* ../../dist"
+  }
+}

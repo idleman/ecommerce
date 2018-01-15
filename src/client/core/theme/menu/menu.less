@@ -1,0 +1,65 @@
+.component-theme-menu {
+  &,
+  ul,
+  li {
+    display: inline-block;
+    list-style-type: none;
+  }
+
+
+  a {
+    color: #393939;
+    border-bottom: 2px solid transparent;
+    padding-bottom: 0.25rem;
+    text-decoration: none;
+    transition: all 600ms ease;
+  }
+
+  a:hover,
+  &--item-is-active > a,
+  &--item-is-active > h3 a {
+    color: #000;
+    border-bottom: 2px solid #646464;
+  }
+
+  &--default {
+    margin: 0;
+    padding: 0.5rem 0 0 0;
+    font-size: 0.9rem;
+    & > li {
+      margin: 0;
+      padding: 0;
+
+      //  Select last the child
+      &:nth-last-child(-n+3) {
+        padding-left: 3rem;
+        .fa {
+          margin-left: 0.25rem;
+          font-size: 1rem;
+        }
+      }
+    }
+
+  }
+
+  &--aside,
+  &--aside ul,
+  &--aside li,
+  &--aside h3 {
+    display: inline-block;
+    width: 100%;
+    margin: 0;
+    padding: 0 0 1.25rem 0;
+    font-size: 0.825rem;
+    font-weight: 400;
+  }
+
+  &--aside > li > h3 {
+    color: #393939;
+    font-weight: 600;
+  }
+  &--aside ul ul li {
+    padding-left: 1.25rem;
+  }
+
+}
