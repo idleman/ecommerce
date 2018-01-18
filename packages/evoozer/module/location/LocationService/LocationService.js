@@ -1,9 +1,28 @@
-import nodeURL from 'url';
+import URL from '../../../http/url';
 import copy from '../../../copy';
 import isEqual from '../../../isEqual';
 
-const { URL = global.URL } = nodeURL;
+const hasOwn = Object.prototype.hasOwnProperty;
 
+const constructURLDataObject = (newUrl = '', nextState = null, nextTitle = '', changes = {}) => {
+  // the URL object has setters on all properties except href
+  const { href, ...urlChanges } = changes;
+
+  let current =  href ? new URL(href, newUrl) : new URL(newUrl);
+
+  current.state = nextState;
+  current.title = nextTitle;
+
+  if(!href) {
+    for(const propertyName in urlChanges) {
+      if (hasOwn.call(urlChanges, propertyName)) {
+        current[propertyName] = urlChanges[propertyName];
+      }
+    }
+  }
+
+  return current;
+};
 
 export default class LocationService {
 
@@ -87,11 +106,18 @@ export default class LocationService {
   _handleLocationChange(newUrl = '', newState = {}, newTitle = '') {
     const dataMap = this._LocationService;
     const { subscribers, $$locationSourceHandler } = dataMap;
+    const previous = { url: dataMap.url, state: dataMap.state, title: dataMap.title };
+
+    const initial = !dataMap.url;
+    if(initial) {
+      dataMap.url = newUrl;
+      dataMap.state = newState;
+      dataMap.title = newTitle;
+    }
 
     const urlData = this._getURLData(newUrl, newState, newTitle);
-    const previous = { url: dataMap.url, state: dataMap.state, title: dataMap.title };
-    //
-    if(!urlData) {
+
+    if(!initial && !urlData) {
       //  Url was not accepted, reset to the old one.
       $$locationSourceHandler.setLocation(copy(previous.state), previous.title, previous.url);
       return;
@@ -120,12 +146,11 @@ export default class LocationService {
     }
   }
 
-  _getURLData(currentUrl, state, title, changes = {}) {
+  _getURLData(newUrl, nextState, nextTitle, changes = {}) {
     const { useList } = this._LocationService;
-    const urlObject = new URL(currentUrl);
-    Object.assign(urlObject, { state, title }, changes);
-    const result = useList.some(cb => !cb(urlObject));
-    return result ? false : urlObject;
+    const urlObject = constructURLDataObject(newUrl, nextState, nextTitle, changes);
+    const result = useList.every(cb => cb(urlObject) !== false);
+    return result ? urlObject : false;
   }
 
 };

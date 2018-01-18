@@ -24,6 +24,7 @@ const routerReducer = (state = routerReducerInitialState, action) => {
 };
 
 
+
 // must return none-false if the process is about to continue
 const fireOnEventIfNotInOtherItems = (eventName, otherItems, baseEventParams = {}) => item => {
   const { when } = item;
@@ -37,6 +38,7 @@ const fireOnEventIfNotInOtherItems = (eventName, otherItems, baseEventParams = {
     const eventParams = Object.assign({}, item, baseEventParams);
     return cb(eventParams) !== false;
   }
+  return true;
 };
 
 
@@ -199,12 +201,13 @@ export default class RouterProvider {
       }
       const primaryItem = currentItems[primaryItemIndex];
       const props = immutable.Map(primaryItem.props);
-      const { whenIndex } = primaryItem;
+      const { whenIndex, list } = primaryItem;
 
       const value = immutable.Map({
         url,
         props,
-        whenIndex
+        whenIndex,
+        list
       });
       const type = ROUTER_ASSIGN_PRIMARY;
       const { store } = dataMap;
@@ -334,7 +337,8 @@ export default class RouterProvider {
       const historyItems = state.getIn(['router', 'history']);
       const currentItem = historyItems.last() || immutable.Map();
       const whenIndex = currentItem.get('whenIndex', -1);
-      const when = whenList[whenIndex] || otherwiseList[whenIndex];
+      const list = currentItem.get('list', 'when');
+      const when = list === 'when' ? whenList[whenIndex] : otherwiseList[whenIndex];
       const props = Object.assign({}, when.props, currentItem.get('props', immutable.Map()).toJS());
 
       return {
@@ -373,8 +377,8 @@ export default class RouterProvider {
 
     const defaultMatch = (...args) => (condition ? new RouteParser(condition).match(...args) : {});
     const { component, Component = null, redirectTo, props = {} } = rules;
-    const defaultOnEnter = () => null;
-    const defaultOnLeave = () => null;
+    const defaultOnEnter = () => true;
+    const defaultOnLeave = () => true;
     const defaultGetComponent = () => component ? $invoke([component, F => F]) : Component;
     const defaultGetLoadingComponent = () => () => null;
     const defaultGetErrorComponent = () => () => null;
@@ -425,15 +429,14 @@ export default class RouterProvider {
     let currentPrimaryItemIndex = -1;
     let lastUrl = null;
     const redirectMiddleware = (url) => {
-      const _matchUrl = url.pathname + url.search + url.hash;
-      const matchUrl = _matchUrl || '/';
+      const matchUrl = url.pathname + url.search + url.hash;
 
       let anyComponent = false;
       const nextItems = [];
-      const addNextItem = (when, whenIndex) => {
+      const addNextItem = (list, when, whenIndex) => {
         const props = when.match(matchUrl);
         if(props) {
-          const nextItem = { props, when, whenIndex };
+          const nextItem = { props, when, whenIndex, list };
           nextItems.push(nextItem);
 
           if(when.hasComponent) {
@@ -442,10 +445,10 @@ export default class RouterProvider {
         }
       };
 
-      whenList.forEach(addNextItem);
+      whenList.forEach(addNextItem.bind(null, 'when'));
 
       if(nextItems.length === 0 || !anyComponent) {
-        otherwiseList.forEach(addNextItem);
+        otherwiseList.forEach(addNextItem.bind(null, 'otherwise'));
       }
 
       // All items in nextItems do match the current url
@@ -455,15 +458,17 @@ export default class RouterProvider {
       const next = url;
       const fireOnLeaveIfNotInNextItems = fireOnEventIfNotInOtherItems('onLeave', nextItems, { next, prev });
       const { currentItems } = dataMap;
-      if(currentItems.some(item => fireOnLeaveIfNotInNextItems(item) === false)) {
+
+      if(!currentItems.every(item => fireOnLeaveIfNotInNextItems(item))) {
         // operation aborted.
-        return true;
+        return false;
       }
 
       const fireOnEnterIfNotInCurrentItems = fireOnEventIfNotInOtherItems('onEnter', currentItems, { next, prev });
-      if(nextItems.some(item => fireOnEnterIfNotInCurrentItems(item) === false)) {
+
+      if(!nextItems.every(item => fireOnEnterIfNotInCurrentItems(item))) {
         // operation aborted.
-        return true;
+        return false;
       }
 
       dataMap.currentItems = nextItems;

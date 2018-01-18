@@ -45,8 +45,7 @@ export default class LocationProvider {
     const { $construct, $invoke, useList, configureHandlers } = dataMap;
 
     const onConfigured = () => {
-      const locationSourceHandler = dataMap.locationSourceHandler;
-      const $$locationSourceHandler = locationSourceHandler;
+      const $$locationSourceHandler = dataMap.locationSourceHandler;
       const $$locationUseList = useList;
       const locals = { $$locationSourceHandler, $$locationUseList };
       return $construct(LocationService, locals);

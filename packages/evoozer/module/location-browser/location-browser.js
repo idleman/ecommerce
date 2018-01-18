@@ -67,6 +67,7 @@ export default new Module('locationBrowser', [ location ])
         return;
       }
       currentState = state;
+
       history.pushState(state, title, url);
       handleStateChange({ state });
     };
